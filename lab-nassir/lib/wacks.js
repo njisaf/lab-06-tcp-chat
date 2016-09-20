@@ -16,35 +16,40 @@ module.exports = function wacks(command, client, string, callback) {
 };
 
 ee.on('\\nick', function(client, string) {
-  var oldNick = client.nickname;
-  client.nickname = string;
-  console.log('nick new nickname', client.nickname);
-  var newNickname = client.nickname;
-  client.socket.write(`Nickname changed to ${newNickname}\n`);
-  pool.forEach((c) => {
-    c.socket.write(`${oldNick} changed their nickname to: ` + newNickname);
+  console.log('nick string', typeof string);
+  if (string === '') {
+    client.socket.write(`You must enter a new nickname.\nUse \'\\nick nickname\'\nYour nickname is still ${client.nickname}\n`);
+    return;
+  } else {
+    var oldNick = client.nickname.trim();
+    client.nickname = string.trim();
+    console.log('nick new nickname', client.nickname);
+    var newNickname = client.nickname;
+    client.socket.write(`Nickname changed to ${newNickname}\n`);
+    pool.forEach((c) => {
+      c.socket.write(`${oldNick} changed their nickname to: ` + newNickname + '\n');
+    });
+  }
   return;
 });
 
 ee.on('\\all', function(client, string) {
-  var printNickname = client.nickname;
-  console.log('pool is ', pool);
-  console.log('string is ', string);
+  var printNickname = client.nickname.trim();
   pool.forEach((c) => {
-    c.socket.write(`${printNickname} says: ` + string);
+    c.socket.write(`${printNickname} says: ` + string + '\n');
   });
   return;
 });
 
 ee.on('\\dm', function(client, string) {
-  var speaker = client.nickname;
+  var speaker = client.nickname.trim();
   var addressee = string.split(' ').shift();
   console.log('dm addressee', addressee);
   var message = string.split(' ').slice(1).join(' ');
   console.log('dm message', message);
   pool.forEach((c) => {
     if (c.nickname === addressee + '\r\n') {
-      c.socket.write(`(${speaker} says to you): ` + message);
+      c.socket.write(`(${speaker} says to you): ` + message + '\n');
     }
   });
   return;
