@@ -40,7 +40,7 @@ server.on('connection', function(socket) {
         var pos = pool.indexOf(c);
         pool.splice(pos, 1);
         pool.forEach((c) => {
-          c.socket.write(`${user} has left the chat.`);
+          c.socket.write(`${user} has left the chat.\n`);
         });
       }
     });
