@@ -41,8 +41,8 @@ ee.on('\\dm', function(client, string) {
   var addressee = string.split(' ').shift();
   var message = string.split(' ').slice(1).join(' ');
   pool.forEach((c) => {
-    if (c.nickname === addressee + '\r\n') {
-      c.socket.write(`(${speaker} says to you): ` + message + '\n');
+    if (c.nickname === addressee) {
+      c.socket.write(speaker + 'says to you): ' + message + '\n');
     }
   });
   return;
