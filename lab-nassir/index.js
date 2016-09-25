@@ -36,7 +36,7 @@ server.on('connection', function(socket) {
   socket.on('close', function() {
     var user = client.nickname;
     pool.forEach((c) => {
-      if (c.nickname === user) {
+      if (c.nickname === user) { // should us client ID instead.
         var pos = pool.indexOf(c);
         pool.splice(pos, 1);
         pool.forEach((c) => {
